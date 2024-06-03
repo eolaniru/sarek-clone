@@ -32,17 +32,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_VARDICTJAVA {
         fasta_fai
     )
 
-    // Combine cram and intervals for spread and gather strategy
-    //cram_intervals = cram.combine(intervals)
-        // Move num_intervals to meta map
-       // .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
-
-    //ch_bam_from_cram.bam
-       //.mix(CRAM_TO_BAM.out.alignment_index)
-       // .combine(intervals)
-       // .map{meta, cram, crai, bam, bai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], bam, bai, intervals ]}
-       // .set{ ch_vardict_input}
-
+    // Combine converted bam, bai and intervals
     ch_bam_from_cram.bam
         .mix(CRAM_TO_BAM.out.alignment_index)
         .combine(intervals)
@@ -51,8 +41,8 @@ workflow BAM_VARIANT_CALLING_SINGLE_VARDICTJAVA {
 
     VARDICTJAVA(
         ch_vardict_input,
-        fasta,
-        fasta_fai
+        fasta.map{fasta -> [[id:fasta.baseName], fasta]},
+        fasta_fai.map{fasta_fai -> [[id:fasta_fai.baseName], fasta_fai]}
     )
 
     // Figuring out if there is one or more vcf(s) from the same sample
