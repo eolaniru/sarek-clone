@@ -67,6 +67,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_sentieon_haplotyper  = Channel.empty()
     vcf_strelka              = Channel.empty()
     vcf_tiddit               = Channel.empty()
+    vcf_vardictjava          = Channel.empty()
 
     // BCFTOOLS MPILEUP
     if (tools.split(',').contains('mpileup')) {
